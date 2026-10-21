@@ -1,8 +1,17 @@
 
+import { NavLink } from 'react-router-dom'
+
 function Sidebar() {
+  const linkClass = ({ isActive }: { isActive: boolean }) =>
+    `shrink-0 rounded-xl px-4 py-3 transition ${
+      isActive
+        ? 'bg-emerald-50 font-semibold text-emerald-700'
+        : 'text-slate-600 hover:bg-slate-50'
+    }`
+
   return (
     <aside className="border-b border-slate-200 bg-white px-6 py-5 md:fixed md:inset-y-0 md:left-0 md:w-64 md:border-b-0 md:border-r">
-      <a href="#dashboard" className="flex items-center gap-3">
+      <NavLink to="/" className="flex items-center gap-3">
         <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-emerald-100 text-2xl">
           🌱
         </div>
@@ -15,29 +24,20 @@ function Sidebar() {
             Consumo consciente
           </p>
         </div>
-      </a>
+      </NavLink>
 
       <nav className="mt-8 flex gap-2 overflow-x-auto md:flex-col">
-        <a
-          href="#dashboard"
-          className="shrink-0 rounded-xl bg-emerald-50 px-4 py-3 font-semibold text-emerald-700"
-        >
+        <NavLink to="/" end className={linkClass}>
           Visão geral
-        </a>
+        </NavLink>
 
-        <a
-          href="#registros"
-          className="shrink-0 rounded-xl px-4 py-3 text-slate-600 transition hover:bg-slate-50"
-        >
+        <NavLink to="/registros" className={linkClass}>
           Registros
-        </a>
+        </NavLink>
 
-        <a
-          href="#dicas"
-          className="shrink-0 rounded-xl px-4 py-3 text-slate-600 transition hover:bg-slate-50"
-        >
+        <NavLink to="/dicas" className={linkClass}>
           Dicas sustentáveis
-        </a>
+        </NavLink>
       </nav>
 
       <div className="mt-8 hidden rounded-2xl bg-sky-50 p-4 md:block">
