@@ -1,4 +1,4 @@
-
+import ConsumptionCharts from '../components/ConsumptionCharts'
 import ConsumptionCard from '../components/ConsumptionCard'
 import { getConsumptions } from '../services/consumptionService'
 
@@ -126,46 +126,38 @@ function Dashboard() {
         />
       </section>
 
-      <section className="mt-8 rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
-        <h2 className="text-lg font-bold text-slate-900">
-          Evolução do consumo
-        </h2>
+      
+<section className="mt-8">
+  <div className="mb-6">
+    <h2 className="text-lg font-bold text-slate-900">
+      Evolução do consumo
+    </h2>
 
-        <p className="mt-1 text-sm text-slate-500">
-          Compare seus registros ao longo dos meses.
-        </p>
+    <p className="mt-1 text-sm text-slate-500">
+      Compare seus registros de água e energia ao longo dos meses.
+    </p>
+  </div>
 
-        {consumptions.length === 0 ? (
-          <div className="mt-6 flex min-h-48 flex-col items-center justify-center rounded-xl border border-dashed border-slate-200 bg-slate-50 p-6 text-center">
-            <span className="text-3xl" aria-hidden="true">
-              📊
-            </span>
+  {consumptions.length === 0 ? (
+    <div className="flex min-h-48 flex-col items-center justify-center rounded-2xl border border-dashed border-slate-200 bg-slate-50 p-6 text-center">
+      <span className="text-3xl" aria-hidden="true">
+        📊
+      </span>
 
-            <p className="mt-3 font-medium text-slate-700">
-              Nenhum consumo cadastrado
-            </p>
+      <p className="mt-3 font-medium text-slate-700">
+        Nenhum consumo cadastrado
+      </p>
 
-            <p className="mt-1 max-w-sm text-sm text-slate-500">
-              Cadastre seu consumo mensal na página Registros para começar
-              a acompanhar sua evolução.
-            </p>
-          </div>
-        ) : (
-          <div className="mt-6 rounded-xl border border-slate-200 bg-slate-50 p-5">
-            <p className="font-semibold text-slate-800">
-              {consumptions.length} {consumptions.length === 1
-                ? 'mês registrado'
-                : 'meses registrados'}
-            </p>
+      <p className="mt-1 max-w-sm text-sm text-slate-500">
+        Cadastre seu consumo mensal na página Registros para começar
+        a acompanhar sua evolução.
+      </p>
+    </div>
+  ) : (
+    <ConsumptionCharts consumptions={consumptions} />
+  )}
+</section>
 
-            <p className="mt-1 text-sm text-slate-500">
-              {consumptions.length < 2
-                ? 'Cadastre mais um mês para começar a comparar seu consumo.'
-                : `Comparação atual entre ${formatMonth(latestConsumption.month)} e ${formatMonth(previousConsumption.month)}.`}
-            </p>
-          </div>
-        )}
-      </section>
     </div>
   )
 }
