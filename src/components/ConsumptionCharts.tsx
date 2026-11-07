@@ -82,14 +82,30 @@ function ConsumptionCharts({ consumptions }: ConsumptionChartsProps) {
     { label: 'Todos', value: 'all' },
   ]
 
+  // Estilos compartilhados dos gráficos
+  const chartAxisStyle = {
+    fontSize: 12,
+    fill: '#94a3b8',
+  }
+
+  const tooltipStyle = {
+    borderRadius: '12px',
+    border: '1px solid #334155',
+    backgroundColor: '#0f172a',
+    color: '#f8fafc',
+    padding: '10px 14px',
+  }
+
   return (
     <div className="space-y-6">
+
       {/* Filtros */}
-      <div className="flex flex-col gap-4 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm sm:flex-row sm:items-end sm:justify-between">
+      <div className="flex flex-col gap-4 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm transition-colors duration-300 dark:border-slate-700 dark:bg-slate-900 sm:flex-row sm:items-end sm:justify-between">
+
         <div className="w-full sm:max-w-48">
           <label
             htmlFor="chart-year"
-            className="mb-2 block text-sm font-medium text-slate-700"
+            className="mb-2 block text-sm font-medium text-slate-700 dark:text-slate-200"
           >
             Ano de referência
           </label>
@@ -98,7 +114,7 @@ function ConsumptionCharts({ consumptions }: ConsumptionChartsProps) {
             id="chart-year"
             value={selectedYear}
             onChange={(event) => setSelectedYear(event.target.value)}
-            className="w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-slate-800 outline-none transition focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100"
+            className="w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-slate-800 outline-none transition focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100 dark:focus:border-emerald-500 dark:focus:ring-emerald-900/40"
           >
             <option value="all">Todos os anos</option>
 
@@ -111,7 +127,7 @@ function ConsumptionCharts({ consumptions }: ConsumptionChartsProps) {
         </div>
 
         <div>
-          <span className="mb-2 block text-sm font-medium text-slate-700">
+          <span className="mb-2 block text-sm font-medium text-slate-700 dark:text-slate-200">
             Período
           </span>
 
@@ -124,8 +140,8 @@ function ConsumptionCharts({ consumptions }: ConsumptionChartsProps) {
                 aria-pressed={selectedPeriod === period.value}
                 className={`rounded-xl px-4 py-3 text-sm font-semibold transition ${
                   selectedPeriod === period.value
-                    ? 'bg-emerald-600 text-white shadow-sm'
-                    : 'border border-slate-200 text-slate-600 hover:bg-emerald-50 hover:text-emerald-700'
+                    ? 'bg-emerald-600 text-white shadow-sm hover:bg-emerald-700'
+                    : 'border border-slate-200 text-slate-600 hover:bg-emerald-50 hover:text-emerald-700 dark:border-slate-700 dark:text-slate-300 dark:hover:bg-slate-800 dark:hover:text-emerald-400'
                 }`}
               >
                 {period.label}
@@ -137,32 +153,34 @@ function ConsumptionCharts({ consumptions }: ConsumptionChartsProps) {
 
       {/* Gráficos */}
       {filteredConsumptions.length === 0 ? (
-        <div className="flex min-h-48 flex-col items-center justify-center rounded-2xl border border-dashed border-slate-200 bg-slate-50 p-6 text-center">
+        <div className="flex min-h-48 flex-col items-center justify-center rounded-2xl border border-dashed border-slate-200 bg-slate-50 p-6 text-center transition-colors dark:border-slate-700 dark:bg-slate-900">
           <span className="text-3xl" aria-hidden="true">
             📊
           </span>
 
-          <p className="mt-3 font-medium text-slate-700">
+          <p className="mt-3 font-medium text-slate-700 dark:text-slate-200">
             Nenhum registro encontrado
           </p>
 
-          <p className="mt-1 text-sm text-slate-500">
+          <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
             Não existem registros para os filtros selecionados.
           </p>
         </div>
       ) : (
         <div className="grid gap-6 lg:grid-cols-2">
+
           {/* Gráfico de água */}
-          <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+          <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm transition-colors duration-300 dark:border-slate-700 dark:bg-slate-900">
             <div className="mb-5">
               <div className="flex items-center gap-2">
                 <span aria-hidden="true">💧</span>
-                <h3 className="font-bold text-slate-900">
+
+                <h3 className="font-bold text-slate-900 dark:text-white">
                   Consumo de água
                 </h3>
               </div>
 
-              <p className="mt-1 text-sm text-slate-500">
+              <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
                 Evolução mensal em metros cúbicos (m³).
               </p>
             </div>
@@ -173,17 +191,20 @@ function ConsumptionCharts({ consumptions }: ConsumptionChartsProps) {
                   data={chartData}
                   margin={{ top: 10, right: 10, left: 0, bottom: 5 }}
                 >
-                  <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
+                  <CartesianGrid
+                    strokeDasharray="3 3"
+                    stroke="#334155"
+                  />
 
                   <XAxis
                     dataKey="month"
-                    tick={{ fontSize: 12 }}
-                    stroke="#94a3b8"
+                    tick={chartAxisStyle}
+                    stroke="#64748b"
                   />
 
                   <YAxis
-                    tick={{ fontSize: 12 }}
-                    stroke="#94a3b8"
+                    tick={chartAxisStyle}
+                    stroke="#64748b"
                     width={45}
                   />
 
@@ -192,18 +213,18 @@ function ConsumptionCharts({ consumptions }: ConsumptionChartsProps) {
                       `${formatValue(Number(value))} m³`,
                       'Consumo',
                     ]}
-                    contentStyle={{
-                      borderRadius: '12px',
-                      border: '1px solid #e2e8f0',
-                    }}
+                    contentStyle={tooltipStyle}
+                    labelStyle={{ color: '#f8fafc', marginBottom: 4 }}
+                    itemStyle={{ color: '#38bdf8' }}
+                    cursor={{ stroke: '#64748b', strokeDasharray: '4 4' }}
                   />
 
                   <Line
                     type="monotone"
                     dataKey="waterM3"
-                    stroke="#0284c7"
+                    stroke="#38bdf8"
                     strokeWidth={3}
-                    dot={{ r: 4, fill: '#0284c7' }}
+                    dot={{ r: 4, fill: '#38bdf8' }}
                     activeDot={{ r: 7 }}
                     name="Água"
                   />
@@ -213,16 +234,17 @@ function ConsumptionCharts({ consumptions }: ConsumptionChartsProps) {
           </div>
 
           {/* Gráfico de energia */}
-          <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+          <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm transition-colors duration-300 dark:border-slate-700 dark:bg-slate-900">
             <div className="mb-5">
               <div className="flex items-center gap-2">
                 <span aria-hidden="true">⚡</span>
-                <h3 className="font-bold text-slate-900">
+
+                <h3 className="font-bold text-slate-900 dark:text-white">
                   Consumo de energia
                 </h3>
               </div>
 
-              <p className="mt-1 text-sm text-slate-500">
+              <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
                 Evolução mensal em quilowatt-hora (kWh).
               </p>
             </div>
@@ -233,17 +255,20 @@ function ConsumptionCharts({ consumptions }: ConsumptionChartsProps) {
                   data={chartData}
                   margin={{ top: 10, right: 10, left: 0, bottom: 5 }}
                 >
-                  <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
+                  <CartesianGrid
+                    strokeDasharray="3 3"
+                    stroke="#334155"
+                  />
 
                   <XAxis
                     dataKey="month"
-                    tick={{ fontSize: 12 }}
-                    stroke="#94a3b8"
+                    tick={chartAxisStyle}
+                    stroke="#64748b"
                   />
 
                   <YAxis
-                    tick={{ fontSize: 12 }}
-                    stroke="#94a3b8"
+                    tick={chartAxisStyle}
+                    stroke="#64748b"
                     width={45}
                   />
 
@@ -252,18 +277,18 @@ function ConsumptionCharts({ consumptions }: ConsumptionChartsProps) {
                       `${formatValue(Number(value))} kWh`,
                       'Consumo',
                     ]}
-                    contentStyle={{
-                      borderRadius: '12px',
-                      border: '1px solid #e2e8f0',
-                    }}
+                    contentStyle={tooltipStyle}
+                    labelStyle={{ color: '#f8fafc', marginBottom: 4 }}
+                    itemStyle={{ color: '#34d399' }}
+                    cursor={{ stroke: '#64748b', strokeDasharray: '4 4' }}
                   />
 
                   <Line
                     type="monotone"
                     dataKey="energyKwh"
-                    stroke="#059669"
+                    stroke="#34d399"
                     strokeWidth={3}
-                    dot={{ r: 4, fill: '#059669' }}
+                    dot={{ r: 4, fill: '#34d399' }}
                     activeDot={{ r: 7 }}
                     name="Energia"
                   />
@@ -274,7 +299,7 @@ function ConsumptionCharts({ consumptions }: ConsumptionChartsProps) {
         </div>
       )}
 
-      <p className="text-sm text-slate-500">
+      <p className="text-sm text-slate-500 dark:text-slate-400">
         Exibindo {filteredConsumptions.length}{' '}
         {filteredConsumptions.length === 1 ? 'registro' : 'registros'}
         {' de '}

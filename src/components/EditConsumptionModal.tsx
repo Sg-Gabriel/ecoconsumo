@@ -68,6 +68,12 @@ function EditConsumptionModal({
     })
   }
 
+  const labelClass =
+    'mb-2 block text-sm font-medium text-slate-700 dark:text-slate-200'
+
+  const inputClass =
+    'w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-slate-800 outline-none transition placeholder:text-slate-400 focus:ring-2 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100 dark:placeholder:text-slate-500'
+
   return (
     <div
       className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto bg-slate-950/50 p-4 backdrop-blur-sm"
@@ -81,22 +87,22 @@ function EditConsumptionModal({
         role="dialog"
         aria-modal="true"
         aria-labelledby="edit-modal-title"
-        className="my-auto w-full max-w-lg rounded-2xl border border-slate-100 bg-white p-6 shadow-2xl sm:p-8"
+        className="my-auto w-full max-w-lg rounded-2xl border border-slate-100 bg-white p-6 shadow-2xl transition-colors duration-300 dark:border-slate-700 dark:bg-slate-900 sm:p-8"
       >
         <div className="flex items-start justify-between gap-4">
           <div>
-            <p className="text-sm font-semibold text-emerald-700">
+            <p className="text-sm font-semibold text-emerald-700 dark:text-emerald-400">
               GERENCIAR CONSUMO
             </p>
 
             <h2
               id="edit-modal-title"
-              className="mt-2 text-2xl font-bold tracking-tight text-slate-900"
+              className="mt-2 text-2xl font-bold tracking-tight text-slate-900 dark:text-white"
             >
               Editar registro
             </h2>
 
-            <p className="mt-2 text-sm text-slate-500">
+            <p className="mt-2 text-sm text-slate-500 dark:text-slate-400">
               Altere os dados do mês selecionado.
             </p>
           </div>
@@ -105,7 +111,7 @@ function EditConsumptionModal({
             type="button"
             onClick={onClose}
             aria-label="Fechar janela"
-            className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl text-xl text-slate-500 transition hover:bg-slate-100 hover:text-slate-800"
+            className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl text-xl text-slate-500 transition hover:bg-slate-100 hover:text-slate-800 dark:text-slate-400 dark:hover:bg-slate-800 dark:hover:text-white"
           >
             ×
           </button>
@@ -113,7 +119,7 @@ function EditConsumptionModal({
 
         <form onSubmit={handleSubmit} className="mt-6">
           <div>
-            <label className="mb-2 block text-sm font-medium text-slate-700">
+            <label className={labelClass}>
               Mês de referência
             </label>
 
@@ -127,7 +133,7 @@ function EditConsumptionModal({
             <div>
               <label
                 htmlFor="edit-waterM3"
-                className="mb-2 block text-sm font-medium text-slate-700"
+                className={labelClass}
               >
                 Água (m³)
               </label>
@@ -140,14 +146,14 @@ function EditConsumptionModal({
                 required
                 value={waterM3}
                 onChange={(event) => setWaterM3(event.target.value)}
-                className="w-full rounded-xl border border-slate-200 px-4 py-3 outline-none focus:border-sky-500 focus:ring-2 focus:ring-sky-100"
+                className={`${inputClass} focus:border-sky-500 focus:ring-sky-100 dark:focus:ring-sky-900/40`}
               />
             </div>
 
             <div>
               <label
                 htmlFor="edit-energyKwh"
-                className="mb-2 block text-sm font-medium text-slate-700"
+                className={labelClass}
               >
                 Energia (kWh)
               </label>
@@ -160,7 +166,7 @@ function EditConsumptionModal({
                 required
                 value={energyKwh}
                 onChange={(event) => setEnergyKwh(event.target.value)}
-                className="w-full rounded-xl border border-slate-200 px-4 py-3 outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100"
+                className={`${inputClass} focus:border-emerald-500 focus:ring-emerald-100 dark:focus:ring-emerald-900/40`}
               />
             </div>
           </div>
@@ -168,7 +174,7 @@ function EditConsumptionModal({
           {error && (
             <p
               role="alert"
-              className="mt-4 rounded-xl bg-red-50 p-3 text-sm text-red-700"
+              className="mt-4 rounded-xl bg-red-50 p-3 text-sm text-red-700 dark:bg-red-950/40 dark:text-red-300"
             >
               {error}
             </p>
@@ -178,7 +184,7 @@ function EditConsumptionModal({
             <button
               type="button"
               onClick={onClose}
-              className="rounded-xl border border-slate-200 px-5 py-3 font-semibold text-slate-600 transition hover:bg-slate-50"
+              className="rounded-xl border border-slate-200 px-5 py-3 font-semibold text-slate-600 transition hover:bg-slate-50 dark:border-slate-700 dark:text-slate-300 dark:hover:bg-slate-800"
             >
               Cancelar
             </button>

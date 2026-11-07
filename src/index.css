@@ -1,5 +1,6 @@
 
 @import "tailwindcss";
+@custom-variant dark (&:where(.dark, .dark *));
 
 :root {
   font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont,
@@ -31,4 +32,11 @@ textarea {
 
 button {
   cursor: pointer;
+}
+:root {
+  color-scheme: light;
+}
+
+html.dark {
+  color-scheme: dark;
 }

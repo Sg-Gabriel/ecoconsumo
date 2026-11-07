@@ -23,8 +23,13 @@ const months = [
 
 function MonthPicker({ value, onChange }: MonthPickerProps) {
   const currentDate = new Date()
-  const selectedYear = value ? Number(value.split('-')[0]) : currentDate.getFullYear()
-  const selectedMonth = value ? Number(value.split('-')[1]) - 1 : -1
+  const selectedYear = value
+    ? Number(value.split('-')[0])
+    : currentDate.getFullYear()
+
+  const selectedMonth = value
+    ? Number(value.split('-')[1]) - 1
+    : -1
 
   const [isOpen, setIsOpen] = useState(false)
   const [year, setYear] = useState(selectedYear)
@@ -42,6 +47,7 @@ function MonthPicker({ value, onChange }: MonthPickerProps) {
 
   return (
     <div className="relative">
+      {/* Botão do calendário */}
       <button
         type="button"
         onClick={() => {
@@ -50,9 +56,12 @@ function MonthPicker({ value, onChange }: MonthPickerProps) {
         }}
         aria-label="Selecionar mês de referência"
         aria-expanded={isOpen}
-        className="flex w-full items-center justify-between gap-3 rounded-xl border border-slate-200 bg-white px-4 py-3 text-left shadow-sm transition hover:border-emerald-400 focus:outline-none focus:ring-2 focus:ring-emerald-100"
+        className="flex w-full items-center justify-between gap-3 rounded-xl border border-slate-200 bg-white px-4 py-3 text-left shadow-sm transition hover:border-emerald-400 focus:outline-none focus:ring-2 focus:ring-emerald-100 dark:border-slate-700 dark:bg-slate-800 dark:focus:ring-emerald-900/40"
       >
-        <span className={value ? 'text-slate-800' : 'text-slate-400'}>
+        <span className={value
+          ? 'text-slate-800 dark:text-slate-100'
+          : 'text-slate-400 dark:text-slate-500'
+        }>
           {displayValue}
         </span>
 
@@ -66,7 +75,7 @@ function MonthPicker({ value, onChange }: MonthPickerProps) {
           strokeWidth="1.8"
           strokeLinecap="round"
           strokeLinejoin="round"
-          className="shrink-0 text-emerald-700"
+          className="shrink-0 text-emerald-700 dark:text-emerald-400"
           aria-hidden="true"
         >
           <rect x="3" y="5" width="18" height="16" rx="2" />
@@ -74,14 +83,17 @@ function MonthPicker({ value, onChange }: MonthPickerProps) {
         </svg>
       </button>
 
+      {/* Janela do calendário */}
       {isOpen && (
-        <div className="absolute left-0 top-full z-20 mt-2 w-full min-w-72 rounded-2xl border border-slate-200 bg-white p-4 shadow-xl sm:w-80">
+        <div className="absolute left-0 top-full z-20 mt-2 w-full min-w-72 rounded-2xl border border-slate-200 bg-white p-4 shadow-xl dark:border-slate-700 dark:bg-slate-900 sm:w-80">
+
+          {/* Navegação entre anos */}
           <div className="mb-5 flex items-center justify-between">
             <button
               type="button"
               onClick={() => setYear((previous) => previous - 1)}
               aria-label="Ano anterior"
-              className="flex h-9 w-9 items-center justify-center rounded-lg text-slate-600 transition hover:bg-slate-100"
+              className="flex h-9 w-9 items-center justify-center rounded-lg text-slate-600 transition hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-800"
             >
               <svg
                 width="20"
@@ -98,7 +110,7 @@ function MonthPicker({ value, onChange }: MonthPickerProps) {
               </svg>
             </button>
 
-            <span className="text-lg font-bold text-slate-900">
+            <span className="text-lg font-bold text-slate-900 dark:text-white">
               {year}
             </span>
 
@@ -106,7 +118,7 @@ function MonthPicker({ value, onChange }: MonthPickerProps) {
               type="button"
               onClick={() => setYear((previous) => previous + 1)}
               aria-label="Próximo ano"
-              className="flex h-9 w-9 items-center justify-center rounded-lg text-slate-600 transition hover:bg-slate-100"
+              className="flex h-9 w-9 items-center justify-center rounded-lg text-slate-600 transition hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-800"
             >
               <svg
                 width="20"
@@ -124,6 +136,7 @@ function MonthPicker({ value, onChange }: MonthPickerProps) {
             </button>
           </div>
 
+          {/* Seleção dos meses */}
           <div className="grid grid-cols-3 gap-2">
             {months.map((month, index) => {
               const isSelected =
@@ -137,7 +150,7 @@ function MonthPicker({ value, onChange }: MonthPickerProps) {
                   className={`rounded-xl px-2 py-3 text-sm transition ${
                     isSelected
                       ? 'bg-emerald-600 font-semibold text-white'
-                      : 'text-slate-600 hover:bg-emerald-50 hover:text-emerald-800'
+                      : 'text-slate-600 hover:bg-emerald-50 hover:text-emerald-800 dark:text-slate-300 dark:hover:bg-emerald-900/30 dark:hover:text-emerald-400'
                   }`}
                 >
                   {month.slice(0, 3)}
@@ -146,10 +159,11 @@ function MonthPicker({ value, onChange }: MonthPickerProps) {
             })}
           </div>
 
+          {/* Fechar calendário */}
           <button
             type="button"
             onClick={() => setIsOpen(false)}
-            className="mt-4 w-full rounded-xl border border-slate-200 py-2 text-sm font-medium text-slate-600 transition hover:bg-slate-50"
+            className="mt-4 w-full rounded-xl border border-slate-200 py-2 text-sm font-medium text-slate-600 transition hover:bg-slate-50 dark:border-slate-700 dark:text-slate-300 dark:hover:bg-slate-800"
           >
             Fechar calendário
           </button>
