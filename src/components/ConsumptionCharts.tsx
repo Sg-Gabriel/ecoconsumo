@@ -82,9 +82,9 @@ function ConsumptionCharts({ consumptions }: ConsumptionChartsProps) {
     { label: 'Todos', value: 'all' },
   ]
 
-  // Estilos compartilhados dos gráficos
+  // Estilos compartilhados dos gráficos.
   const chartAxisStyle = {
-    fontSize: 12,
+    fontSize: 11,
     fill: '#94a3b8',
   }
 
@@ -97,10 +97,10 @@ function ConsumptionCharts({ consumptions }: ConsumptionChartsProps) {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="min-w-0 space-y-6">
 
       {/* Filtros */}
-      <div className="flex flex-col gap-4 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm transition-colors duration-300 dark:border-slate-700 dark:bg-slate-900 sm:flex-row sm:items-end sm:justify-between">
+      <div className="flex min-w-0 flex-col gap-5 rounded-2xl border border-slate-200 bg-white p-4 shadow-sm transition-colors duration-300 dark:border-slate-700 dark:bg-slate-900 sm:flex-row sm:items-end sm:justify-between sm:p-5">
 
         <div className="w-full sm:max-w-48">
           <label
@@ -126,19 +126,19 @@ function ConsumptionCharts({ consumptions }: ConsumptionChartsProps) {
           </select>
         </div>
 
-        <div>
+        <div className="w-full sm:w-auto">
           <span className="mb-2 block text-sm font-medium text-slate-700 dark:text-slate-200">
             Período
           </span>
 
-          <div className="flex flex-wrap gap-2">
+          <div className="grid grid-cols-3 gap-2 sm:flex">
             {periods.map((period) => (
               <button
                 key={period.value}
                 type="button"
                 onClick={() => setSelectedPeriod(period.value)}
                 aria-pressed={selectedPeriod === period.value}
-                className={`rounded-xl px-4 py-3 text-sm font-semibold transition ${
+                className={`rounded-xl px-2 py-3 text-xs font-semibold transition sm:px-4 sm:text-sm ${
                   selectedPeriod === period.value
                     ? 'bg-emerald-600 text-white shadow-sm hover:bg-emerald-700'
                     : 'border border-slate-200 text-slate-600 hover:bg-emerald-50 hover:text-emerald-700 dark:border-slate-700 dark:text-slate-300 dark:hover:bg-slate-800 dark:hover:text-emerald-400'
@@ -153,7 +153,7 @@ function ConsumptionCharts({ consumptions }: ConsumptionChartsProps) {
 
       {/* Gráficos */}
       {filteredConsumptions.length === 0 ? (
-        <div className="flex min-h-48 flex-col items-center justify-center rounded-2xl border border-dashed border-slate-200 bg-slate-50 p-6 text-center transition-colors dark:border-slate-700 dark:bg-slate-900">
+        <div className="flex min-h-48 flex-col items-center justify-center rounded-2xl border border-dashed border-slate-200 bg-slate-50 p-5 text-center transition-colors dark:border-slate-700 dark:bg-slate-900 sm:p-6">
           <span className="text-3xl" aria-hidden="true">
             📊
           </span>
@@ -167,11 +167,11 @@ function ConsumptionCharts({ consumptions }: ConsumptionChartsProps) {
           </p>
         </div>
       ) : (
-        <div className="grid gap-6 lg:grid-cols-2">
+        <div className="grid min-w-0 gap-5 lg:grid-cols-2 lg:gap-6">
 
           {/* Gráfico de água */}
-          <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm transition-colors duration-300 dark:border-slate-700 dark:bg-slate-900">
-            <div className="mb-5">
+          <div className="min-w-0 rounded-2xl border border-slate-200 bg-white p-4 shadow-sm transition-colors duration-300 dark:border-slate-700 dark:bg-slate-900 sm:p-5">
+            <div className="mb-4 sm:mb-5">
               <div className="flex items-center gap-2">
                 <span aria-hidden="true">💧</span>
 
@@ -185,11 +185,11 @@ function ConsumptionCharts({ consumptions }: ConsumptionChartsProps) {
               </p>
             </div>
 
-            <div className="h-64 w-full">
+            <div className="h-56 w-full min-w-0 sm:h-64">
               <ResponsiveContainer width="100%" height="100%">
                 <LineChart
                   data={chartData}
-                  margin={{ top: 10, right: 10, left: 0, bottom: 5 }}
+                  margin={{ top: 10, right: 8, left: -15, bottom: 5 }}
                 >
                   <CartesianGrid
                     strokeDasharray="3 3"
@@ -200,12 +200,19 @@ function ConsumptionCharts({ consumptions }: ConsumptionChartsProps) {
                     dataKey="month"
                     tick={chartAxisStyle}
                     stroke="#64748b"
+                    tickLine={false}
+                    axisLine={false}
+                    tickMargin={10}
+                    minTickGap={20}
+                    interval="preserveStartEnd"
                   />
 
                   <YAxis
                     tick={chartAxisStyle}
                     stroke="#64748b"
-                    width={45}
+                    width={42}
+                    tickLine={false}
+                    axisLine={false}
                   />
 
                   <Tooltip
@@ -224,8 +231,8 @@ function ConsumptionCharts({ consumptions }: ConsumptionChartsProps) {
                     dataKey="waterM3"
                     stroke="#38bdf8"
                     strokeWidth={3}
-                    dot={{ r: 4, fill: '#38bdf8' }}
-                    activeDot={{ r: 7 }}
+                    dot={{ r: 3, fill: '#38bdf8' }}
+                    activeDot={{ r: 6 }}
                     name="Água"
                   />
                 </LineChart>
@@ -234,8 +241,8 @@ function ConsumptionCharts({ consumptions }: ConsumptionChartsProps) {
           </div>
 
           {/* Gráfico de energia */}
-          <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm transition-colors duration-300 dark:border-slate-700 dark:bg-slate-900">
-            <div className="mb-5">
+          <div className="min-w-0 rounded-2xl border border-slate-200 bg-white p-4 shadow-sm transition-colors duration-300 dark:border-slate-700 dark:bg-slate-900 sm:p-5">
+            <div className="mb-4 sm:mb-5">
               <div className="flex items-center gap-2">
                 <span aria-hidden="true">⚡</span>
 
@@ -249,11 +256,11 @@ function ConsumptionCharts({ consumptions }: ConsumptionChartsProps) {
               </p>
             </div>
 
-            <div className="h-64 w-full">
+            <div className="h-56 w-full min-w-0 sm:h-64">
               <ResponsiveContainer width="100%" height="100%">
                 <LineChart
                   data={chartData}
-                  margin={{ top: 10, right: 10, left: 0, bottom: 5 }}
+                  margin={{ top: 10, right: 8, left: -15, bottom: 5 }}
                 >
                   <CartesianGrid
                     strokeDasharray="3 3"
@@ -264,12 +271,19 @@ function ConsumptionCharts({ consumptions }: ConsumptionChartsProps) {
                     dataKey="month"
                     tick={chartAxisStyle}
                     stroke="#64748b"
+                    tickLine={false}
+                    axisLine={false}
+                    tickMargin={10}
+                    minTickGap={20}
+                    interval="preserveStartEnd"
                   />
 
                   <YAxis
                     tick={chartAxisStyle}
                     stroke="#64748b"
-                    width={45}
+                    width={42}
+                    tickLine={false}
+                    axisLine={false}
                   />
 
                   <Tooltip
@@ -288,8 +302,8 @@ function ConsumptionCharts({ consumptions }: ConsumptionChartsProps) {
                     dataKey="energyKwh"
                     stroke="#34d399"
                     strokeWidth={3}
-                    dot={{ r: 4, fill: '#34d399' }}
-                    activeDot={{ r: 7 }}
+                    dot={{ r: 3, fill: '#34d399' }}
+                    activeDot={{ r: 6 }}
                     name="Energia"
                   />
                 </LineChart>
