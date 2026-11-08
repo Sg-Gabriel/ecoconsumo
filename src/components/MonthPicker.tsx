@@ -85,7 +85,7 @@ function MonthPicker({ value, onChange }: MonthPickerProps) {
 
       {/* Janela do calendário */}
       {isOpen && (
-        <div className="absolute left-0 top-full z-20 mt-2 w-full min-w-72 rounded-2xl border border-slate-200 bg-white p-4 shadow-xl dark:border-slate-700 dark:bg-slate-900 sm:w-80">
+        <div className="absolute left-0 top-full z-20 mt-2 box-border w-full max-w-80 rounded-2xl border border-slate-200 bg-white p-4 shadow-xl dark:border-slate-700 dark:bg-slate-900">
 
           {/* Navegação entre anos */}
           <div className="mb-5 flex items-center justify-between">

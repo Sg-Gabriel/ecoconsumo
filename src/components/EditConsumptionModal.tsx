@@ -72,11 +72,11 @@ function EditConsumptionModal({
     'mb-2 block text-sm font-medium text-slate-700 dark:text-slate-200'
 
   const inputClass =
-    'w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-slate-800 outline-none transition placeholder:text-slate-400 focus:ring-2 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100 dark:placeholder:text-slate-500'
+    'w-full min-w-0 rounded-xl border border-slate-200 bg-white px-4 py-3 text-base text-slate-800 outline-none transition placeholder:text-slate-400 focus:ring-2 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100 dark:placeholder:text-slate-500'
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto bg-slate-950/50 p-4 backdrop-blur-sm"
+      className="fixed inset-0 z-50 flex items-start justify-center overflow-y-auto bg-slate-950/50 p-3 backdrop-blur-sm sm:items-center sm:p-4"
       onMouseDown={(event) => {
         if (event.target === event.currentTarget) {
           onClose()
@@ -87,22 +87,22 @@ function EditConsumptionModal({
         role="dialog"
         aria-modal="true"
         aria-labelledby="edit-modal-title"
-        className="my-auto w-full max-w-lg rounded-2xl border border-slate-100 bg-white p-6 shadow-2xl transition-colors duration-300 dark:border-slate-700 dark:bg-slate-900 sm:p-8"
+        className="my-auto w-full min-w-0 max-w-lg rounded-2xl border border-slate-100 bg-white p-4 shadow-2xl transition-colors duration-300 dark:border-slate-700 dark:bg-slate-900 sm:p-6 md:p-8"
       >
-        <div className="flex items-start justify-between gap-4">
-          <div>
-            <p className="text-sm font-semibold text-emerald-700 dark:text-emerald-400">
+        <div className="flex items-start justify-between gap-3">
+          <div className="min-w-0">
+            <p className="text-xs font-semibold text-emerald-700 dark:text-emerald-400 sm:text-sm">
               GERENCIAR CONSUMO
             </p>
 
             <h2
               id="edit-modal-title"
-              className="mt-2 text-2xl font-bold tracking-tight text-slate-900 dark:text-white"
+              className="mt-2 text-xl font-bold tracking-tight text-slate-900 dark:text-white sm:text-2xl"
             >
               Editar registro
             </h2>
 
-            <p className="mt-2 text-sm text-slate-500 dark:text-slate-400">
+            <p className="mt-2 text-sm leading-relaxed text-slate-500 dark:text-slate-400">
               Altere os dados do mês selecionado.
             </p>
           </div>
@@ -117,8 +117,8 @@ function EditConsumptionModal({
           </button>
         </div>
 
-        <form onSubmit={handleSubmit} className="mt-6">
-          <div>
+        <form onSubmit={handleSubmit} className="mt-5 sm:mt-6">
+          <div className="min-w-0">
             <label className={labelClass}>
               Mês de referência
             </label>
@@ -129,8 +129,8 @@ function EditConsumptionModal({
             />
           </div>
 
-          <div className="mt-5 grid gap-5 sm:grid-cols-2">
-            <div>
+          <div className="mt-5 grid min-w-0 grid-cols-1 gap-5 sm:grid-cols-2">
+            <div className="min-w-0">
               <label
                 htmlFor="edit-waterM3"
                 className={labelClass}
@@ -150,7 +150,7 @@ function EditConsumptionModal({
               />
             </div>
 
-            <div>
+            <div className="min-w-0">
               <label
                 htmlFor="edit-energyKwh"
                 className={labelClass}
@@ -180,18 +180,18 @@ function EditConsumptionModal({
             </p>
           )}
 
-          <div className="mt-8 flex flex-col-reverse gap-3 sm:flex-row sm:justify-end">
+          <div className="mt-6 flex flex-col-reverse gap-3 sm:mt-8 sm:flex-row sm:justify-end">
             <button
               type="button"
               onClick={onClose}
-              className="rounded-xl border border-slate-200 px-5 py-3 font-semibold text-slate-600 transition hover:bg-slate-50 dark:border-slate-700 dark:text-slate-300 dark:hover:bg-slate-800"
+              className="w-full rounded-xl border border-slate-200 px-5 py-3 font-semibold text-slate-600 transition hover:bg-slate-50 dark:border-slate-700 dark:text-slate-300 dark:hover:bg-slate-800 sm:w-auto"
             >
               Cancelar
             </button>
 
             <button
               type="submit"
-              className="rounded-xl bg-emerald-600 px-5 py-3 font-semibold text-white transition hover:bg-emerald-700"
+              className="w-full rounded-xl bg-emerald-600 px-5 py-3 font-semibold text-white transition hover:bg-emerald-700 sm:w-auto"
             >
               Salvar alterações
             </button>
