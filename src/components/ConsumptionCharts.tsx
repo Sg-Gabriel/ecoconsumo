@@ -1,5 +1,5 @@
 
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 
 import {
   CartesianGrid,
@@ -27,21 +27,17 @@ function ConsumptionCharts({ consumptions }: ConsumptionChartsProps) {
   const [selectedYear, setSelectedYear] = useState('all')
   const [selectedPeriod, setSelectedPeriod] = useState<Period>('12')
 
-  useEffect(() => {
-    if (
-      selectedYear !== 'all' &&
-      !availableYears.includes(selectedYear)
-    ) {
-      setSelectedYear('all')
-    }
-  }, [selectedYear, availableYears.join(',')])
+  const effectiveSelectedYear =
+    selectedYear !== 'all' && !availableYears.includes(selectedYear)
+      ? 'all'
+      : selectedYear
 
   // Primeiro, filtra pelo ano.
   const yearConsumptions = consumptions
     .filter((item) =>
-      selectedYear === 'all'
+      effectiveSelectedYear === 'all'
         ? true
-        : item.month.startsWith(`${selectedYear}-`),
+        : item.month.startsWith(`${effectiveSelectedYear}-`),
     )
     .sort((a, b) => a.month.localeCompare(b.month))
 
@@ -98,10 +94,8 @@ function ConsumptionCharts({ consumptions }: ConsumptionChartsProps) {
 
   return (
     <div className="min-w-0 space-y-6">
-
       {/* Filtros */}
       <div className="flex min-w-0 flex-col gap-5 rounded-2xl border border-slate-200 bg-white p-4 shadow-sm transition-colors duration-300 dark:border-slate-700 dark:bg-slate-900 sm:flex-row sm:items-end sm:justify-between sm:p-5">
-
         <div className="w-full sm:max-w-48">
           <label
             htmlFor="chart-year"
@@ -112,7 +106,7 @@ function ConsumptionCharts({ consumptions }: ConsumptionChartsProps) {
 
           <select
             id="chart-year"
-            value={selectedYear}
+            value={effectiveSelectedYear}
             onChange={(event) => setSelectedYear(event.target.value)}
             className="w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-slate-800 outline-none transition focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100 dark:focus:border-emerald-500 dark:focus:ring-emerald-900/40"
           >
@@ -168,7 +162,6 @@ function ConsumptionCharts({ consumptions }: ConsumptionChartsProps) {
         </div>
       ) : (
         <div className="grid min-w-0 gap-5 lg:grid-cols-2 lg:gap-6">
-
           {/* Gráfico de água */}
           <div className="min-w-0 rounded-2xl border border-slate-200 bg-white p-4 shadow-sm transition-colors duration-300 dark:border-slate-700 dark:bg-slate-900 sm:p-5">
             <div className="mb-4 sm:mb-5">
@@ -317,7 +310,10 @@ function ConsumptionCharts({ consumptions }: ConsumptionChartsProps) {
         Exibindo {filteredConsumptions.length}{' '}
         {filteredConsumptions.length === 1 ? 'registro' : 'registros'}
         {' de '}
-        {selectedYear === 'all' ? 'todos os anos' : selectedYear}.
+        {effectiveSelectedYear === 'all'
+          ? 'todos os anos'
+          : effectiveSelectedYear}
+        .
       </p>
     </div>
   )

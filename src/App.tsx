@@ -1,11 +1,12 @@
 
-import { useEffect, useState } from 'react'
+import { lazy, Suspense, useEffect, useState } from 'react'
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom'
 
 import Sidebar from './components/Sidebar'
-import Dashboard from './pages/Dashboard'
-import Records from './pages/Records'
-import Tips from './pages/Tips'
+
+const Dashboard = lazy(() => import('./pages/Dashboard'))
+const Records = lazy(() => import('./pages/Records'))
+const Tips = lazy(() => import('./pages/Tips'))
 
 function App() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false)
@@ -120,12 +121,22 @@ function App() {
             </div>
           </header>
 
-          <Routes>
-            <Route path="/" element={<Dashboard />} />
-            <Route path="/registros" element={<Records />} />
-            <Route path="/dicas" element={<Tips />} />
-            <Route path="*" element={<Navigate to="/" replace />} />
-          </Routes>
+          <Suspense
+            fallback={
+              <div className="flex min-h-[50vh] items-center justify-center">
+                <p className="text-sm font-medium text-slate-500 dark:text-slate-400">
+                  Carregando página...
+                </p>
+              </div>
+            }
+          >
+            <Routes>
+              <Route path="/" element={<Dashboard />} />
+              <Route path="/registros" element={<Records />} />
+              <Route path="/dicas" element={<Tips />} />
+              <Route path="*" element={<Navigate to="/" replace />} />
+            </Routes>
+          </Suspense>
 
           <footer className="mt-12 border-t border-slate-200 py-6 text-center text-sm text-slate-500 dark:border-slate-700 dark:text-slate-400">
             EcoConsumo · Consumo consciente, futuro sustentável.

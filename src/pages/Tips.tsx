@@ -16,7 +16,7 @@ import {
   completeTip,
   getCompletedTips,
   uncompleteTip,
-} from '../services/TipService'
+} from '../services/tipService'
 
 import {
   getAvailableChallenges,
@@ -29,6 +29,7 @@ import {
 
 import {
   checkAchievements,
+  getUnlockedAchievements,
 } from '../services/achievementService'
 
 function Tips() {
@@ -36,96 +37,70 @@ function Tips() {
     TipCategory | 'todos'
   >('todos')
 
-  const [completedIds, setCompletedIds] = useState<string[]>([])
-  const [challenge, setChallenge] = useState<Challenge | null>(null)
-  const [unlockedIds, setUnlockedIds] = useState<string[]>([])
+  const [completedIds, setCompletedIds] = useState<string[]>(
+    () => getCompletedTips().map((progress) => progress.tipId),
+  )
+
+  const [challenge, setChallenge] = useState<Challenge | null>(
+    () => getChallenge(),
+  )
+
+  const [unlockedIds, setUnlockedIds] = useState<string[]>(
+    () => getUnlockedAchievements(),
+  )
 
   const [achievementNotifications, setAchievementNotifications] =
     useState<Achievement[]>([])
 
-  // Controla a exibição das tarefas e da seleção de desafios
-  const [showChallengeTasks, setShowChallengeTasks] = useState(true)
-  const [showChallengeSelector, setShowChallengeSelector] = useState(false)
+  // Controla a exibição das tarefas e da seleção de desafios.
+  const [showChallengeTasks, setShowChallengeTasks] = useState(() => {
+    if (!challenge) return false
+
+    const completed =
+      challenge.tasks.length > 0 &&
+      challenge.tasks.every((task) => task.completed)
+
+    return !completed && !isChallengeExpired(challenge)
+  })
+
+  const [showChallengeSelector, setShowChallengeSelector] = useState(
+    () => challenge === null,
+  )
 
   const availableChallenges = getAvailableChallenges()
 
-  // Recupera os dados salvos quando a página é carregada
-  useEffect(() => {
-    const savedProgress = getCompletedTips()
-    const savedChallenge = getChallenge()
-
-    const savedIds = savedProgress.map(
-      (progress) => progress.tipId
-    )
-
-    setCompletedIds(savedIds)
-    setChallenge(savedChallenge)
-
-    setShowChallengeSelector(savedChallenge === null)
-
-    const savedChallengeCompleted =
-      savedChallenge !== null &&
-      savedChallenge.tasks.length > 0 &&
-      savedChallenge.tasks.every((task) => task.completed)
-
-    const savedChallengeExpired =
-      savedChallenge !== null &&
-      isChallengeExpired(savedChallenge)
-
-    setShowChallengeTasks(
-      savedChallenge !== null &&
-      !savedChallengeCompleted &&
-      !savedChallengeExpired
-    )
-
-    const unlocked = checkAchievements(
-      savedIds.length,
-      savedChallenge !== null,
-      savedChallengeCompleted
-    )
-
-    setUnlockedIds(unlocked)
-  }, [])
-
-  // Exibe as notificações uma por vez
+  // Exibe as notificações uma por vez.
   useEffect(() => {
     if (achievementNotifications.length === 0) return
 
     const timer = setTimeout(() => {
       setAchievementNotifications((previous) =>
-        previous.slice(1)
+        previous.slice(1),
       )
     }, 4000)
 
     return () => clearTimeout(timer)
   }, [achievementNotifications])
 
-  // Verifica se o desafio foi concluído
+  // Verifica se o desafio foi concluído.
   const challengeCompleted =
     challenge !== null &&
     challenge.tasks.length > 0 &&
     challenge.tasks.every((task) => task.completed)
 
-  // Verifica se o prazo do desafio terminou
+  // Verifica se o prazo do desafio terminou.
   const challengeExpired =
     challenge !== null && isChallengeExpired(challenge)
 
-  // Recolhe as tarefas quando o desafio termina
-  useEffect(() => {
-    if (challengeCompleted || challengeExpired) {
-      setShowChallengeTasks(false)
-    }
-  }, [challengeCompleted, challengeExpired])
-
-  // Identifica e adiciona novas conquistas à fila de notificações
+  // Identifica e adiciona novas conquistas à fila de notificações.
   function notifyNewAchievements(unlocked: string[]) {
     const newAchievements = unlocked
       .filter((id) => !unlockedIds.includes(id))
       .map((id) =>
-        achievements.find((item) => item.id === id)
+        achievements.find((item) => item.id === id),
       )
       .filter(
-        (item): item is Achievement => item !== undefined
+        (item): item is Achievement => item !== undefined,
       )
 
     if (newAchievements.length > 0) {
@@ -138,14 +113,14 @@ function Tips() {
     setUnlockedIds(unlocked)
   }
 
-  // Fecha a notificação atual
+  // Fecha a notificação atual.
   function handleCloseNotification() {
     setAchievementNotifications((previous) =>
-      previous.slice(1)
+      previous.slice(1),
     )
   }
 
-  // Marca ou desmarca uma dica
+  // Marca ou desmarca uma dica.
   function handleToggleTip(tipId: string) {
     const isCompleted = completedIds.includes(tipId)
 
@@ -155,7 +130,7 @@ function Tips() {
       uncompleteTip(tipId)
 
       updatedIds = completedIds.filter(
-        (id) => id !== tipId
+        (id) => id !== tipId,
       )
     } else {
       completeTip(tipId)
@@ -168,13 +143,13 @@ function Tips() {
     const unlocked = checkAchievements(
       updatedIds.length,
       challenge !== null,
-      challengeCompleted
+      challengeCompleted,
     )
 
     notifyNewAchievements(unlocked)
   }
 
-  // Inicia o desafio escolhido
+  // Inicia o desafio escolhido.
   function handleStartChallenge(challengeId: string) {
     const newChallenge = startChallenge(challengeId)
 
@@ -186,13 +161,13 @@ function Tips() {
     const unlocked = checkAchievements(
       completedIds.length,
       true,
-      false
+      false,
     )
 
     notifyNewAchievements(unlocked)
   }
 
-  // Atualiza uma tarefa do desafio
+  // Atualiza uma tarefa do desafio.
   function handleToggleChallengeTask(taskId: string) {
     const updatedChallenge = toggleChallengeTask(taskId)
 
@@ -204,24 +179,28 @@ function Tips() {
       updatedChallenge.tasks.length > 0 &&
       updatedChallenge.tasks.every((task) => task.completed)
 
+    if (completed) {
+      setShowChallengeTasks(false)
+    }
+
     const unlocked = checkAchievements(
       completedIds.length,
       true,
-      completed
+      completed,
     )
 
     notifyNewAchievements(unlocked)
   }
 
-  // Filtra as dicas pela categoria selecionada
+  // Filtra as dicas pela categoria selecionada.
   const filteredTips =
     selectedCategory === 'todos'
       ? tips
       : tips.filter(
-          (tip) => tip.category === selectedCategory
+          (tip) => tip.category === selectedCategory,
         )
 
-  // Progresso geral das dicas
+  // Progresso geral das dicas.
   const totalTips = tips.length
   const completedCount = completedIds.length
 
@@ -230,12 +209,12 @@ function Tips() {
       ? Math.round((completedCount / totalTips) * 100)
       : 0
 
-  // Progresso do desafio
+  // Progresso do desafio.
   const challengeProgress = challenge
     ? getChallengeProgress(challenge)
     : 0
 
-  // Formata datas para exibição
+  // Formata datas para exibição.
   function formatDisplayDate(dateString: string) {
     const [year, month, day] = dateString.split('-')
 
@@ -244,7 +223,6 @@ function Tips() {
 
   return (
     <div className="w-full min-w-0">
-
       {/* Notificação de conquista */}
       {achievementNotifications.length > 0 && (
         <div
@@ -310,7 +288,6 @@ function Tips() {
 
       {/* Desafio sustentável */}
       <section className="mb-8 overflow-hidden rounded-2xl border border-emerald-200 bg-white shadow-sm transition-colors duration-300 dark:border-emerald-900/50 dark:bg-slate-900">
-
         {/* Cabeçalho do desafio */}
         <div className="bg-emerald-50 p-5 dark:bg-emerald-950/30 sm:p-6">
           <p className="text-xs font-semibold tracking-wide text-emerald-800 dark:text-emerald-400">
@@ -328,7 +305,6 @@ function Tips() {
         </div>
 
         <div className="p-5 sm:p-6">
-
           {/* Seleção dos desafios */}
           {(!challenge || showChallengeSelector) && (
             <div>
@@ -441,7 +417,7 @@ function Tips() {
 
                   <p className="text-sm font-bold text-emerald-700 dark:text-emerald-400">
                     {challenge.tasks.filter(
-                      (task) => task.completed
+                      (task) => task.completed,
                     ).length}
                     {' de '}
                     {challenge.tasks.length} tarefas
@@ -634,7 +610,7 @@ function Tips() {
             const isCompleted = completedIds.includes(tip.id)
 
             const category = categories.find(
-              (item) => item.id === tip.category
+              (item) => item.id === tip.category,
             )
 
             return (
@@ -763,7 +739,7 @@ function Tips() {
         <div className="grid min-w-0 grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {achievements.map((achievement) => {
             const isUnlocked = unlockedIds.includes(
-              achievement.id
+              achievement.id,
             )
 
             let currentProgress = 0
@@ -771,7 +747,7 @@ function Tips() {
             if (achievement.condition === 'tips') {
               currentProgress = Math.min(
                 completedCount,
-                achievement.target ?? 0
+                achievement.target ?? 0,
               )
             } else if (
               achievement.condition === 'challenge-started'
@@ -839,7 +815,7 @@ function Tips() {
                         className="h-full rounded-full bg-emerald-500 transition-all duration-500"
                         style={{
                           width: `${Math.round(
-                            (currentProgress / target) * 100
+                            (currentProgress / target) * 100,
                           )}%`,
                         }}
                       />
