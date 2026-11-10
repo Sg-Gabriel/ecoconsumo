@@ -1,0 +1,63 @@
+
+node_modules
+dist
+.git
+.github
+.vscode
+.idea
+coverage
+*.log
+.env
+.env.*
+!.env.example
+README.md
+```
+
+Não precisamos enviar dependências instaladas localmente, builds anteriores e configurações do Git para o Docker.
+
+## Etapa 4 — Docker Compose
+
+Crie `docker-compose.yml`:
+
+<CodeBlock language="yaml" editable>
+services:
+  ecoconsumo:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: ecoconsumo
+    ports:
+      - "8080:8080"
+    restart: unless-stopped
+
+    # Limita os recursos utilizados pelo container
+    cpus: 0.50
+    mem_limit: 128m
+    pids_limit: 50
+
+    # Restringe privilégios
+    read_only: true
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+
+    # Diretórios temporários graváveis
+    tmpfs:
+      - /tmp:rw,noexec,nosuid,size=16m
+      - /var/cache/nginx:rw,noexec,nosuid,size=16m
+      - /var/run:rw,noexec,nosuid,size=4m
+
+    # Verifica se o servidor está respondendo
+    healthcheck:
+      test:
+        - CMD
+        - wget
+        - -q
+        - -O
+        - /dev/null
+        - http://127.0.0.1:8080/
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
